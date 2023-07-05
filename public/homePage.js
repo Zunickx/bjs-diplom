@@ -13,3 +13,11 @@ class LogoutButton {
         }
     }
 }
+
+// Получение информации о пользователе
+
+ApiConnector.current((response) => {
+    if(response.success) {
+        ProfileWidget.showProfile(response.data);
+    }
+});
