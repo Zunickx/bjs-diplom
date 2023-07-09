@@ -21,3 +21,18 @@ ApiConnector.current((response) => {
         ProfileWidget.showProfile(response.data);
     }
 });
+
+// Получение текущих курсов валюты
+
+const ratesBoard = new RatesBoard();
+
+function ratesBoard() {
+    ApiConnector.getStocks(result => {
+        if (result.success) {
+            ratesBoard.clearTable();
+            ratesBoard.fillTable(result.data);
+        }
+    });
+}
+newRatesBoard();
+setInterval(() => newRatesBoard(), 60000);
