@@ -1,6 +1,6 @@
-// Выход из личного кабинета
+'use strict';
 
-const { response } = require("express");
+// Выход из личного кабинета
 
 const logoutButton = new LogoutButton();
 
@@ -11,7 +11,7 @@ class LogoutButton {
                 if(response.success) {
                     location.reload();
                 }
-            })
+            });
         }
     }
 }
@@ -68,8 +68,8 @@ moneyManager.conversionMoneyCallback  = function(data) {
         } else {
             MessageWidget.setMessage(false, response.error);
         }
-    })
-}
+    });
+};
 
 moneyManager.sendMoneyCallback = function(data) {
     ApiConnector.transferMoney(data, (response) => {
@@ -79,5 +79,42 @@ moneyManager.sendMoneyCallback = function(data) {
         } else {
             MessageWidget.setMessage(false, response.error);
         }
-    })
-}
+    });
+};
+
+// Работа с избранным
+
+const favoritesWidget = new FavoritesWidget();
+
+// Запрос начального списка избранного
+
+favoritesWidget.getFavorites();
+
+favoritesWidget.addUserCallback = function(data) {
+    ApiConnector.addUserToFavorites(data, (response) => {
+        if(response.success) {
+            // Очистка текущего списка избранного
+            favoritesWidget.clearTable();
+            // Отрисовка полученных данных
+            favoritesWidget.fillTable(response.data);
+            // Заполнение выпадающего списка для перевода денег
+            favoritesWidget.updateUsersList(response.data);
+            favoritesWidget.setMessage(true, 'Пользователь, успешно добавлен в избранное');
+        } else {
+            favoritesWidget.setMessage(false, response.error);
+        }
+    });
+};
+
+favoritesWidget.removeUserCallback = function(data) {
+    ApiConnector.removeUserFromFavorites(data, (response) => {
+        if(response.success) {
+            favoritesWidget.clearTable();
+            favoritesWidget.fillTable(response.data);
+            favoritesWidget.updateUsersList(response.data);
+            favoritesWidget.setMessage(true, 'Пользователь, успешно удален из избранного');
+        } else {
+            favoritesWidget.setMessage(false, response.error);
+        }
+    });
+};
