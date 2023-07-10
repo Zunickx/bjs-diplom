@@ -70,3 +70,14 @@ moneyManager.conversionMoneyCallback  = function(data) {
         }
     })
 }
+
+moneyManager.sendMoneyCallback = function(data) {
+    ApiConnector.transferMoney(data, (response) => {
+        if (response.success) {
+            ProfileWidget.convertMoney(response.data);
+            MessageWidget.setMessage(true, 'Перевод, выполнен успешно');
+        } else {
+            MessageWidget.setMessage(false, response.error);
+        }
+    })
+}
