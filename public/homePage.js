@@ -28,7 +28,7 @@ ApiConnector.current((response) => {
 
 const ratesBoard = new RatesBoard();
 
-function ratesBoard() {
+function newRatesBoard(ratesBoard) {
     ApiConnector.getStocks(result => {
         if (result.success) {
             ratesBoard.clearTable();
