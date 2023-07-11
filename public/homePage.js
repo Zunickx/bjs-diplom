@@ -2,19 +2,15 @@
 
 // Выход из личного кабинета
 
-const logoutButton = new LogoutButton();
+const logout = new LogoutButton();
 
-class LogoutButton {
-    constructor() {
-        this.action = () => {
-            ApiConnector.logout((response) => {
-                if(response.success) {
-                    location.reload();
-                }
-            });
+logout.action = () => {
+    ApiConnector.logout((response) => {
+        if(response.success) {
+            logout.reload();
         }
-    }
-}
+    });
+};
 
 // Получение информации о пользователе
 
@@ -28,7 +24,7 @@ ApiConnector.current((response) => {
 
 const ratesBoard = new RatesBoard();
 
-function newRatesBoard(ratesBoard) {
+function newRatesBoard() {
     ApiConnector.getStocks(result => {
         if (result.success) {
             ratesBoard.clearTable();
