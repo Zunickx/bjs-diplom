@@ -84,23 +84,26 @@ const favoritesWidget = new FavoritesWidget();
 
 // Запрос начального списка избранного
 
-favoritesWidget.getFavorites();
+ApiConnector.getFavorites((response) => {
+    if(response.success) {
+        favoritesWidget.clearTable();
+        favoritesWidget.fillTable(response.data);
+        favoritesWidget.updateUsersList(response.data);
+    }
+});
 
 favoritesWidget.addUserCallback = function(data) {
     ApiConnector.addUserToFavorites(data, (response) => {
         if(response.success) {
-            // Очистка текущего списка избранного
             favoritesWidget.clearTable();
-            // Отрисовка полученных данных
             favoritesWidget.fillTable(response.data);
-            // Заполнение выпадающего списка для перевода денег
             favoritesWidget.updateUsersList(response.data);
             favoritesWidget.setMessage(true, 'Пользователь, успешно добавлен в избранное');
         } else {
             favoritesWidget.setMessage(false, response.error);
         }
     });
-};
+}
 
 favoritesWidget.removeUserCallback = function(data) {
     ApiConnector.removeUserFromFavorites(data, (response) => {
