@@ -56,27 +56,49 @@ moneyManager.addMoneyCallback = function(data) {
     });
   };
 
-moneyManager.conversionMoneyCallback  = function(data) {
-    ApiConnector.convertMoney(data, (response) => {
-        if (response.success) {
-            ProfileWidget.convertMoney(response.data);
-            MessageWidget.setMessage(true, 'Конвертация выполнена успешно');
-        } else {
-            MessageWidget.setMessage(false, response.error);
-        }
-    });
-};
+// moneyManager.conversionMoneyCallback  = function(data) {
+//     ApiConnector.convertMoney(data, (response) => {
+//         if (response.success) {
+//             ProfileWidget.convertMoney(response.data);
+//             MessageWidget.setMessage(true, 'Конвертация выполнена успешно');
+//         } else {
+//             MessageWidget.setMessage(false, response.error);
+//         }
+//     });
+// };
 
-moneyManager.sendMoneyCallback = function(data) {
-    ApiConnector.transferMoney(data, (response) => {
+moneyManager.conversionMoneyCallback = data => {
+    ApiConnector.convertMoney(data, response => {
         if (response.success) {
-            ProfileWidget.convertMoney(response.data);
-            MessageWidget.setMessage(true, 'Перевод, выполнен успешно');
+            ProfileWidget.showProfile(response.data);
+            moneyManager.setMessage(false, 'Конвертация выполнена успешно!');
         } else {
-            MessageWidget.setMessage(false, response.error);
+            moneyManager.setMessage(true, response.data);
         }
     });
-};
+}
+
+// moneyManager.sendMoneyCallback = function(data) {
+//     ApiConnector.transferMoney(data, (response) => {
+//         if (response.success) {
+//             ProfileWidget.convertMoney(response.data);
+//             MessageWidget.setMessage(true, 'Перевод, выполнен успешно');
+//         } else {
+//             MessageWidget.setMessage(false, response.error);
+//         }
+//     });
+// };
+
+moneyManager.sendMoneyCallback = data => {
+    ApiConnector.transferMoney(data, response => {
+        if (response.success) {
+            ProfileWidget.showProfile(response.data);
+            moneyManager.setMessage(false, 'Перевод выполнен успешно!');
+        } else {
+            moneyManager.setMessage(true, response.data);
+        }
+    });
+}
 
 // Работа с избранным
 
@@ -88,7 +110,7 @@ ApiConnector.getFavorites((response) => {
     if(response.success) {
         favoritesWidget.clearTable();
         favoritesWidget.fillTable(response.data);
-        favoritesWidget.updateUsersList(response.data);
+        moneyManager.updateUsersList(response.data);
     }
 });
 
@@ -97,7 +119,7 @@ favoritesWidget.addUserCallback = function(data) {
         if(response.success) {
             favoritesWidget.clearTable();
             favoritesWidget.fillTable(response.data);
-            favoritesWidget.updateUsersList(response.data);
+            moneyManager.updateUsersList(response.data);
             favoritesWidget.setMessage(true, 'Пользователь, успешно добавлен в избранное');
         } else {
             favoritesWidget.setMessage(false, response.error);
@@ -110,7 +132,7 @@ favoritesWidget.removeUserCallback = function(data) {
         if(response.success) {
             favoritesWidget.clearTable();
             favoritesWidget.fillTable(response.data);
-            favoritesWidget.updateUsersList(response.data);
+            moneyManager.updateUsersList(response.data);
             favoritesWidget.setMessage(true, 'Пользователь, успешно удален из избранного');
         } else {
             favoritesWidget.setMessage(false, response.error);
