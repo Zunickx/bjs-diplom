@@ -48,10 +48,10 @@ moneyManager.addMoneyCallback = function(data) {
         // Отображение новых данных о пользователе
         ProfileWidget.showProfile(response.data);
         // Вывод сообщения об успехе
-        MessageWidget.setMessage(true, 'Баланс успешно пополнен');
+        moneyManager.setMessage(true, 'Баланс успешно пополнен');
       } else {
         // Вывод сообщения об ошибке
-        MessageWidget.setMessage(false, response.error);
+        moneyManager.setMessage(false, response.error);
       }
     });
   };
@@ -68,12 +68,12 @@ moneyManager.addMoneyCallback = function(data) {
 // };
 
 moneyManager.conversionMoneyCallback = data => {
-    ApiConnector.convertMoney(data, response => {
+    ApiConnector.convertMoney(data, (response) => {
         if (response.success) {
             ProfileWidget.showProfile(response.data);
-            moneyManager.setMessage(false, 'Конвертация выполнена успешно!');
+            moneyManager.setMessage(response.success, 'Конвертация выполнена успешно!');
         } else {
-            moneyManager.setMessage(true, response.data);
+            moneyManager.setMessage(response.success, response.error);
         }
     });
 }
@@ -90,12 +90,12 @@ moneyManager.conversionMoneyCallback = data => {
 // };
 
 moneyManager.sendMoneyCallback = data => {
-    ApiConnector.transferMoney(data, response => {
+    ApiConnector.transferMoney(data, (response) => {
         if (response.success) {
             ProfileWidget.showProfile(response.data);
-            moneyManager.setMessage(false, 'Перевод выполнен успешно!');
+            moneyManager.setMessage(response.success, 'Перевод выполнен успешно!');
         } else {
-            moneyManager.setMessage(true, response.data);
+            moneyManager.setMessage(response.success, response.error);
         }
     });
 }
